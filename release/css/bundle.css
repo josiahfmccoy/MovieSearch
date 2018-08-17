@@ -79,8 +79,7 @@ button, .btn {
     button.solid.disabled, .solid.disabled.btn {
       background-color: rgba(0, 99, 177, 0.8); }
 
-h1, h2, h3,
-h4, h5, h6 {
+h1, h2, h3 {
   margin-bottom: 12px; }
 
 hr {
@@ -105,20 +104,11 @@ footer {
   display: table;
   clear: both; }
 
-.no-wrap {
-  white-space: nowrap; }
-
 .text-center {
   text-align: center; }
 
-.text-right {
-  text-align: right; }
-
 .float-left {
   float: left; }
-
-.float-right {
-  float: right; }
 
 .flexbox {
   display: flex; }
