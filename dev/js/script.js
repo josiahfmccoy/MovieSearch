@@ -107,8 +107,6 @@ function displayMovies(movies) {
 
 function displaySearchData(data) {
 
-    console.log(data);
-
     const q = decodeURIComponent(currentQuery.query);
     $('#search-form input[name="query"]').val(q);
 
