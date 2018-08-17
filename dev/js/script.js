@@ -74,7 +74,7 @@ function displayMovies(movies) {
     let img;
     let info;
 
-    let imgBase = apiConfig.images.base_url 
+    let imgBase = apiConfig.images.secure_base_url 
         + apiConfig.images.poster_sizes[0];
 
     for (let i = 0, len = movies.length; i < len; i++) {
