@@ -265,6 +265,9 @@ $(function () {
             // smoothly via ajax.
             location.hash = QUERY_STRING.stringify(currentQuery)
                 .replace('?', '#');
+
+            // Jump to top of list to mimic navigation.
+            window.scrollTo(0,0);
         }
     });
 
