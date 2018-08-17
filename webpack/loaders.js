@@ -4,7 +4,7 @@ const plugins = require('./plugins');
 
 const JSLoader = {
     test: /\.js$/,
-    include: path.resolve(__dirname, '../dev'),
+    include: path.resolve(__dirname, 'dev'),
     use: {
         loader: 'babel-loader',
         options: {
