@@ -2,6 +2,9 @@
   "name": "moviesearch",
   "version": "0.1.0",
   "private": true,
+  "dependencies": {
+    "query-string": "^6.1.0"
+  },
   "devDependencies": {
     "node-sass": "^4.0.0",
     "sass-loader": "^6.0.6",
