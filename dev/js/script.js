@@ -58,6 +58,9 @@ function buildPaginator(data) {
 
         paginator.append(li);
     }
+
+    $('#page-number').text("Page " + data.page 
+        + " of " + data.total_pages);
 }
 
 function movieLinkElement(movie) {
@@ -97,7 +100,9 @@ function displayMovies(movies) {
         info.append($('<p>' + m.overview + ' </p>')
             .append(movieLinkElement(m).text('Read more.')));
 
-        info.append('<small>(' + m.release_date + ')</small>');
+        if (m.release_date) {
+            info.append('<small>(' + m.release_date + ')</small>');
+        }
 
         li.append(info);
 
