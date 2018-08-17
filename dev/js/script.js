@@ -133,10 +133,17 @@ function displaySearchData(data) {
     }
 }
 
-function queryAPI() {
+function querySearchAPI(term, handler) {
     currentQuery = QUERY_STRING.parse(location.hash);
 
-    let q = currentQuery.query;
+    let q;
+    if (!term) {
+        q = currentQuery.query;
+    }
+    else {
+        q = term;
+    }
+
     if (!q) { 
         // If query is falsy, hide result displays 
         // and don't bother with ajax
@@ -163,24 +170,33 @@ function queryAPI() {
             });
     }
 
-    $.when(gotConfig).done(function() {
+    $.when(gotConfig).done(function() { 
+        // If we were not passed an explicit handler then
+        // just display the search results.
+        handler = handler || displaySearchData;
+
         $.getJSON(API_FUNCTION.search, 
             {
                 api_key: API_KEY,
-                query: decodeURIComponent(q), // Don't double encode!
+                // Don't double encode!
+                query: decodeURIComponent(q), 
                 page: parseInt(page),
-                include_adult: false // This should be family-friendly
+                // Make sure we're always family-friendly
+                include_adult: false 
             },
-            displaySearchData);
+            handler);
     });
 }
 
 
 $(function () {
-    $('#search-form button[type="submit"]').click(function(e) {
+    let mainInput = $('#search-form input[name="query"]');
+    let searchBtn = $('#search-form button[type="submit"]');
+
+    searchBtn.click(function(e) {
         e.preventDefault();
 
-        let q = $('#search-form input[name="query"]').val().trim();
+        let q = mainInput.val().trim();
 
         // We need to encode the query so it is safe to put
         // in the hash, but remember to decode before using in 
@@ -207,9 +223,31 @@ $(function () {
     });
 
     $(window).on('hashchange', function(e) {
-        queryAPI();
+        querySearchAPI();
+    });
+
+    mainInput.autocomplete({
+        source: function (request, response) {
+            querySearchAPI(request.term, function(data) {
+                response($.map(data.results, function (val) {
+                    return {
+                        label: val.title,
+                        value: val.title
+                    }
+                }));
+            });
+        },
+        minLength: 3,
+        delay: 100,
+        select: function(e, ui) {
+            console.log(ui)
+            mainInput.val(ui.item.label);
+            searchBtn.click();
+        }
     });
 
 
-    queryAPI();
+    querySearchAPI();
+
+    mainInput.focus();
 });
