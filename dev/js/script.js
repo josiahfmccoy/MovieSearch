@@ -6,21 +6,25 @@ const API_URL = 'https://api.themoviedb.org/3/';
 const API_KEY = '2cbd63fe8cd1579bef2fd02178529651';
 const API_FUNCTION = {
     config: API_URL + 'configuration',
-    search: API_URL + 'search/movie',
-    find: API_URL + 'find/movie',
-    discover: API_URL + 'discover/movie'
+    search: API_URL + 'search/movie'
 }
 
 let currentQuery = {};
 let apiConfig = null;
 
 
+/**
+ * Builds a pagination control for the list of movies as necessary
+ * @param {object} data - the JSON object returned by the TMDb API
+ */
 function buildPaginator(data) {
     let paginator = $('#results .pagination').empty();
 
+    // Variables for loop; no need to recreate these every time.
     let li;
     let a;
 
+    // Loop to build the pagination buttons
     for (let i = data.page - 2, len = data.page + 2; i <= len; i++) {
         // Don't show extra previous and next buttons...
         if (i < 0 || i > (data.total_pages + 1)) {
@@ -29,11 +33,14 @@ function buildPaginator(data) {
 
         li = $('<li />');
 
+        // Disable prev/next if their indices are out of bounds,
+        // and disable the current page
         if (i < 1 || i > data.total_pages || i == data.page) {
             li.addClass('btn disabled');
             a = $('<span />');
         }
         else {
+            // Otherwise, provide a link to switch pages
             a = $('<a />');
             a.attr('href', '?page=' + i);
             a.addClass('btn');
@@ -49,9 +56,11 @@ function buildPaginator(data) {
             a.html('&#187;');
         }
         else {
+            // Otherwise, show page number
             a.text(i);
         }
 
+        // Mark the current page
         if (i == data.page) {
             li.addClass('solid');
         }
@@ -59,26 +68,38 @@ function buildPaginator(data) {
         paginator.append(li);
     }
 
+    // Show the current/total pages
     $('#page-number').text("Page " + data.page 
         + " of " + data.total_pages);
 }
 
+
+/**
+ * Returns a jQuery anchor element that links to the TMDb page for a movie
+ * @param {object} movie - a JSON movie object from the TMDb API
+ */
 function movieLinkElement(movie) {
     let url = 'https://www.themoviedb.org/movie/' + movie.id;
     return $('<a href="' + url + '" target="_blank" />');
 }
 
+/**
+ * Builds the HTML to display a list of movies on screen
+ * @param {array} movies - a JSON results array from the TMDb API
+ */
 function displayMovies(movies) {
     let list = $('#movie-list').empty();
 
-    let m;
-    let li;
-
-    let img;
-    let info;
-
+    // The API search function just gives the image name;
+    // we have to get the path from the API configuration options
     let imgBase = apiConfig.images.secure_base_url 
         + apiConfig.images.poster_sizes[0];
+
+    // Variables for loop; no need to recreate these every time.
+    let m;
+    let li;
+    let img;
+    let info;
 
     for (let i = 0, len = movies.length; i < len; i++) {
         m = movies[i];
@@ -110,6 +131,11 @@ function displayMovies(movies) {
     }
 }
 
+
+/**
+ * Displays the results of querying the TMDb movie API on screen
+ * @param {object} data - the JSON object returned by the TMDb API
+ */
 function displaySearchData(data) {
 
     const q = decodeURIComponent(currentQuery.query);
@@ -130,13 +156,19 @@ function displaySearchData(data) {
     else {
         resultsContainer.hide();
 
-        if (q) { // If there was a query, show no results msg
+        if (q) { // If there was a query, show "no results" msg
             $('#no-results-query').text(decodeURIComponent(q));
             noResultsMsg.show();
         }
     }
 }
 
+
+/**
+ * Calls the TMDb API search function
+ * @param {string} term - optional search term.  If not provided, the function tries to get its search term from the current url hash
+ * @param {function} handler - optional function to execute on the API response; should accept the json data as a parameter.  If not provided, we simply display the results on screen 
+ */
 function querySearchAPI(term, handler) {
     currentQuery = QUERY_STRING.parse(location.hash);
 
@@ -157,13 +189,14 @@ function querySearchAPI(term, handler) {
     }
 
     let page = currentQuery.page;
-    if (isNaN(page)) {
+    if (isNaN(page)) { // The API needs a valid page to query
         page = 1
     }
 
-    let gotConfig = true;
+    let gotConfig = true; // Dummy value
 
-    // Make sure we have the general config info for TMDb
+    // Make sure we have the config info for TMDb
+    // so that we can get image paths later
     if (apiConfig == null) { 
         gotConfig = $.getJSON(API_FUNCTION.config,
             {
@@ -193,6 +226,9 @@ function querySearchAPI(term, handler) {
 }
 
 
+/**
+ * On load; attach event handlers, etc.
+ */
 $(function () {
     let mainInput = $('#search-form input[name="query"]');
     let searchBtn = $('#search-form button[type="submit"]');
@@ -232,6 +268,10 @@ $(function () {
         }
     });
 
+
+    // Allows us to use back button in browser, etc.
+    // Using # instead of ? also lets us load elements more
+    // smoothly via ajax.
     $(window).on('hashchange', function(e) {
         querySearchAPI();
     });
