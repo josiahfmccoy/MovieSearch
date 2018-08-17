@@ -79,7 +79,7 @@ function displayMovies(movies) {
 
     for (let i = 0, len = movies.length; i < len; i++) {
         m = movies[i];
-        li = $('<li class="clear" />');
+        li = $('<li class="content-box clear" />');
 
         if (m.poster_path) {
             img = $('<img class="movie-img float-left"'
@@ -112,15 +112,26 @@ function displaySearchData(data) {
     const q = decodeURIComponent(currentQuery.query);
     $('#search-form input[name="query"]').val(q);
 
+    let resultsContainer = $('#results');
+    let noResultsMsg = $('#no-results');
+
+    noResultsMsg.hide();
+
     if (data.total_results > 0) {
         buildPaginator(data);
 
         displayMovies(data.results);
 
-        $('#results').show();
+        resultsContainer.show();
     }
     else {
-        $('#results').hide();
+        resultsContainer.hide();
+
+        if (q) { // If there was a query, show no results msg
+            console.log(q)
+            $('#no-results-query').text(decodeURIComponent(q));
+            noResultsMsg.show();
+        }
     }
 }
 
@@ -128,7 +139,10 @@ function queryAPI() {
     currentQuery = QUERY_STRING.parse(location.hash);
 
     let q = currentQuery.query;
-    if (!q) { // If query is falsy, hide results and do nothing
+    if (!q) { 
+        // If query is falsy, hide result displays 
+        // and don't bother with ajax
+        $('#no-results').hide()
         $('#results').hide();
         return;
     }
@@ -170,17 +184,15 @@ $(function () {
 
         let q = $('#search-form input[name="query"]').val().trim();
 
-        if (q) {
-            // We need to encode the query so it is safe to put
-            // in the hash, but remember to decode before using in 
-            // jQuery ajax, otherwise jQuery double-encodes it.
-            currentQuery.query = encodeURIComponent(q);
-            
-            currentQuery.page = 1;
+        // We need to encode the query so it is safe to put
+        // in the hash, but remember to decode before using in 
+        // jQuery ajax, otherwise jQuery double-encodes it.
+        currentQuery.query = encodeURIComponent(q);
 
-            location.hash = QUERY_STRING.stringify(currentQuery)
-                .replace('?', '#');
-        }
+        currentQuery.page = 1;
+
+        location.hash = QUERY_STRING.stringify(currentQuery)
+            .replace('?', '#');
     });
 
     $('.pagination').on('click', 'a', function(e) {

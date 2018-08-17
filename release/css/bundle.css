@@ -52,12 +52,12 @@ button, .btn {
   margin-right: 10px;
   margin-bottom: 6px;
   padding: 0 1.25em;
-  border: 1px solid #34495e;
+  border: 1px solid #0063b1;
   border-radius: 2em;
   background-color: white;
   line-height: 2em;
   font-weight: bold;
-  color: #34495e;
+  color: #0063b1;
   font-size: 100%;
   cursor: pointer; }
   button.wide, .wide.btn {
@@ -65,23 +65,29 @@ button, .btn {
   button:hover, .btn:hover {
     background-color: #ebebeb; }
   button.invert:hover, .invert.btn:hover {
-    background-color: #34495e;
+    background-color: #0063b1;
     color: white; }
   button.disabled, .disabled.btn {
     background-color: #ebebeb;
     cursor: default; }
   button.solid, .solid.btn {
     border: none;
-    background-color: #34495e;
+    background-color: #0063b1;
     color: white; }
     button.solid:hover, .solid.btn:hover {
-      background-color: rgba(52, 73, 94, 0.8); }
+      background-color: rgba(0, 99, 177, 0.8); }
     button.solid.disabled, .solid.disabled.btn {
-      background-color: rgba(52, 73, 94, 0.8); }
+      background-color: rgba(0, 99, 177, 0.8); }
 
 h1, h2, h3,
 h4, h5, h6 {
   margin-bottom: 12px; }
+
+hr {
+  max-width: 80%;
+  margin: 12px auto;
+  border: none;
+  border-bottom: 1px dotted black; }
 
 a {
   text-decoration: none; }
@@ -132,32 +138,40 @@ footer {
   .pagination li {
     list-style: none; }
 
-/* ID decoration */
-#main-title {
-  margin-top: 20px;
-  margin-bottom: 20px; }
-
-#search-form {
-  margin-top: 20px;
-  width: 100%; }
-
-#results {
-  margin-top: 20px;
-  width: 100%; }
-
-#movie-list li {
-  list-style: none;
+.content-box {
+  display: block;
   margin: 15px;
   padding: 15px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.04); }
+
+/* ID decoration */
+#main-title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: serif; }
+
+#search-form {
+  margin: 20px auto;
+  width: 100%; }
+
+#results {
+  width: 100%; }
+
+#movie-list li {
+  list-style: none; }
   #movie-list li .movie-img {
     margin-right: 12px;
     margin-bottom: 8px;
     border-radius: 5px; }
   #movie-list li .movie-info {
     overflow: hidden; }
+
+#no-results {
+  color: #da3b01; }
+  #no-results hr {
+    border-color: #a72d01; }
 
 #tmdb-logo {
   width: 180px;
@@ -174,8 +188,7 @@ footer {
     margin-top: 50px; }
   #search-form.main {
     max-width: 100%;
-    width: 500px;
-    margin: 0 auto; }
+    width: 500px; }
   /* Class decoration */
   .only-desktop {
     display: unset; } }
@@ -185,7 +198,6 @@ footer {
   /* Class decoration */
   .hide-desktop {
     display: none !important; }
-  /* ID decoration */
-  #movie-list li {
+  .content-box {
     margin: 30px;
     padding: 30px; } }
