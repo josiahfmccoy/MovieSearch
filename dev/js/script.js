@@ -109,7 +109,7 @@ function displaySearchData(data) {
 
     console.log(data);
 
-    const q = currentQuery.query;
+    const q = decodeURIComponent(currentQuery.query);
     $('#search-form input[name="query"]').val(q);
 
     if (data.total_results > 0) {
@@ -118,6 +118,9 @@ function displaySearchData(data) {
         displayMovies(data.results);
 
         $('#results').show();
+    }
+    else {
+        $('#results').hide();
     }
 }
 
@@ -152,8 +155,9 @@ function queryAPI() {
         $.getJSON(API_FUNCTION.search, 
             {
                 api_key: API_KEY,
-                query: encodeURIComponent(q),
-                page: parseInt(page)
+                query: decodeURIComponent(q), // Don't double encode!
+                page: parseInt(page),
+                include_adult: false // This should be family-friendly
             },
             displaySearchData);
     });
@@ -167,7 +171,11 @@ $(function () {
         let q = $('#search-form input[name="query"]').val().trim();
 
         if (q) {
+            // We need to encode the query so it is safe to put
+            // in the hash, but remember to decode before using in 
+            // jQuery ajax, otherwise jQuery double-encodes it.
             currentQuery.query = encodeURIComponent(q);
+            
             currentQuery.page = 1;
 
             location.hash = QUERY_STRING.stringify(currentQuery)
