@@ -250,6 +250,9 @@ $(function () {
         // smoothly via ajax.
         location.hash = QUERY_STRING.stringify(currentQuery)
             .replace('?', '#');
+
+        // Make sure the autocomplete goes away
+        mainInput.autocomplete('close');
     });
 
     $('.pagination').on('click', 'a', function(e) {
