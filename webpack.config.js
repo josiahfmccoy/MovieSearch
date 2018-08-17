@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin'); // scss to css
+const loaders = require('./webpack/loaders');
+const plugins = require('./webpack/plugins');
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
@@ -9,15 +10,9 @@ module.exports = {
         path.resolve(__dirname, 'dev') + '/css/style.scss'
     ],
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                include: path.resolve(__dirname, 'dev')
-            },
-            {
-                test: /\.s?css$/,
-                loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
-            }
+        loaders: [
+            loaders.JSLoader,
+            loaders.CSSLoader
         ]
     },
     output: {
@@ -25,11 +20,9 @@ module.exports = {
         filename: 'js/bundle.js'
     },
     plugins: [
-        new ExtractTextPlugin({ // define where to save the file
-          filename: 'css/bundle.css',
-          allChunks: true,
-        }),
-        new webpack.optimize.OccurrenceOrderPlugin()
+        plugins.ExtractTextPlugin,
+        plugins.LoaderOptionsPlugin,
+        plugins.OccurrenceOrderPlugin
     ]
     //, watch: true
 };
