@@ -8,6 +8,11 @@ const ExtractTextPlugin = new _ExtractTextPlugin({
     allChunks: true,
 });
 
+const UglifyJsPlugin = new webpack.optimize.UglifyJsPlugin({
+    include: /\.js$/,
+    minimize: true
+});
+
 const LoaderOptionsPlugin = new webpack.LoaderOptionsPlugin({
     minimize: true
 });
@@ -18,6 +23,7 @@ const OccurrenceOrderPlugin =
 
 module.exports = {
     ExtractTextPlugin: ExtractTextPlugin,
+    UglifyJsPlugin: UglifyJsPlugin,
     LoaderOptionsPlugin: LoaderOptionsPlugin,
     OccurrenceOrderPlugin: OccurrenceOrderPlugin
 };

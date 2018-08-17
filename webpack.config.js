@@ -21,6 +21,7 @@ module.exports = {
     },
     plugins: [
         plugins.ExtractTextPlugin,
+        plugins.UglifyJsPlugin,
         plugins.LoaderOptionsPlugin,
         plugins.OccurrenceOrderPlugin
     ]
