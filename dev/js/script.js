@@ -126,7 +126,6 @@ function displaySearchData(data) {
         resultsContainer.hide();
 
         if (q) { // If there was a query, show no results msg
-            console.log(q)
             $('#no-results-query').text(decodeURIComponent(q));
             noResultsMsg.show();
         }
@@ -205,6 +204,9 @@ $(function () {
 
         currentQuery.page = 1;
 
+        // Allows us to use back button in browser, etc.
+        // Using # instead of ? also lets us load elements more
+        // smoothly via ajax.
         location.hash = QUERY_STRING.stringify(currentQuery)
             .replace('?', '#');
     });
@@ -217,6 +219,9 @@ $(function () {
         if (!isNaN(p)) {
             currentQuery.page = p;
 
+            // Allows us to use back button in browser, etc.
+            // Using # instead of ? also lets us load elements more
+            // smoothly via ajax.
             location.hash = QUERY_STRING.stringify(currentQuery)
                 .replace('?', '#');
         }
@@ -226,28 +231,37 @@ $(function () {
         querySearchAPI();
     });
 
+    // Autocomplete for searchbar; use ajax to get top 10
+    // results from API after at least 3 chars are entered
     mainInput.autocomplete({
         source: function (request, response) {
             querySearchAPI(request.term, function(data) {
-                response($.map(data.results, function (val) {
-                    return {
-                        label: val.title,
-                        value: val.title
-                    }
-                }));
+                // Make sure we map the results to something
+                // that the autocomplete can understand
+                response($.map(data.results.slice(0, 10), 
+                    function (val) {
+                        return {
+                            label: val.title,
+                            value: val.title
+                        }
+                    }));
             });
         },
         minLength: 3,
         delay: 100,
+        // If the user picks an option, search for it immediately
         select: function(e, ui) {
-            console.log(ui)
             mainInput.val(ui.item.label);
             searchBtn.click();
         }
     });
 
 
+    // Try to display movies, in case we loaded with query params
+    // already present in the url
     querySearchAPI();
 
+    // Focus the search bar as soon as the page loads,
+    // so the user can immediately begin typing
     mainInput.focus();
 });
