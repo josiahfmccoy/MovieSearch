@@ -1,5 +1,5 @@
 
-import QUERY_STRING from 'query-string';
+import HASH_STRING from './url-hash';
 
 
 const API_URL = 'https://api.themoviedb.org/3/';
@@ -170,7 +170,7 @@ function displaySearchData(data) {
  * @param {function} handler - optional function to execute on the API response; should accept the json data as a parameter.  If not provided, we simply display the results on screen 
  */
 function querySearchAPI(term, handler) {
-    currentQuery = QUERY_STRING.parse(location.hash);
+    currentQuery = HASH_STRING.parse(location.hash);
 
     let q;
     if (!term) {
@@ -248,8 +248,7 @@ $(function () {
         // Allows us to use back button in browser, etc.
         // Using # instead of ? also lets us load elements more
         // smoothly via ajax.
-        location.hash = QUERY_STRING.stringify(currentQuery)
-            .replace('?', '#');
+        location.hash = HASH_STRING.stringify(currentQuery);
 
         // Make sure the autocomplete goes away
         mainInput.autocomplete('close');
@@ -266,8 +265,7 @@ $(function () {
             // Allows us to use back button in browser, etc.
             // Using # instead of ? also lets us load elements more
             // smoothly via ajax.
-            location.hash = QUERY_STRING.stringify(currentQuery)
-                .replace('?', '#');
+            location.hash = HASH_STRING.stringify(currentQuery);
 
             // Jump to top of list to mimic navigation.
             window.scrollTo(0,0);
